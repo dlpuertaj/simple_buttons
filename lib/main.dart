@@ -10,6 +10,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    int buttons = 4;
+
     return MaterialApp(
       title: 'New App Ussing Flutter',
 
@@ -26,14 +28,18 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
+
       themeMode: ThemeMode.dark,
-      home: MyHomeScreen(), //const Text('The New App'),MyHomeScreen(),//
+
+      home: MyHomeScreen(buttons), //const Text('The New App'),MyHomeScreen(),//
     );
   }
 }
 
 class MyHomeScreen extends StatelessWidget {
-  const MyHomeScreen({super.key});
+  const MyHomeScreen(this.buttons, {super.key});
+
+  final int buttons;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +54,34 @@ class MyHomeScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        verticalDirection: VerticalDirection.down,
         children: [
-          Container(color: Colors.red, child: Text('Button')),
-          Container(color: Colors.deepPurple, child: Text('Space')),
+          DynamicButtonBuilder(buttons: buttons),
+          Container(color: Colors.deepPurple, child: Text('')),
         ],
       ),
+    );
+  }
+}
+
+class DynamicButtonBuilder extends StatelessWidget {
+  const DynamicButtonBuilder({super.key, required this.buttons});
+
+  final int buttons;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (int i = 0; i < buttons; i++)
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(2),
+              color: Colors.red,
+              child: Text('Button ${i + 1}', textAlign: TextAlign.center),
+            ),
+          ),
+      ],
     );
   }
 }
