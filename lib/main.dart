@@ -44,6 +44,15 @@ class MyHomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add_circle))],
       ),
+
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(color: Colors.red, child: Text('Button')),
+          Container(color: Colors.deepPurple, child: Text('Space')),
+        ],
+      ),
     );
   }
 }
