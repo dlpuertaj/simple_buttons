@@ -60,11 +60,15 @@ class MyHomeScreen extends StatelessWidget {
         verticalDirection: VerticalDirection.down,
 
         children: [
-          DynamicButtonBuilder(numberOfButtons: numberOfButtons),
+          DynamicButtonBuilder(
+            numberOfButtons: numberOfButtons,
+            maxButtonsPerRow: maxButtonsPerRow,
+          ),
 
           if (numberOfButtonRows == 2)
             DynamicButtonBuilder(
               numberOfButtons: (numberOfButtons - maxButtonsPerRow),
+              maxButtonsPerRow: maxButtonsPerRow,
             ),
 
           Container(color: Colors.deepPurple, child: Text('')),
@@ -75,15 +79,20 @@ class MyHomeScreen extends StatelessWidget {
 }
 
 class DynamicButtonBuilder extends StatelessWidget {
-  const DynamicButtonBuilder({super.key, required this.numberOfButtons});
+  const DynamicButtonBuilder({
+    super.key,
+    required this.numberOfButtons,
+    required this.maxButtonsPerRow,
+  });
 
   final int numberOfButtons;
+  final int maxButtonsPerRow;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        for (int i = 0; i < numberOfButtons; i++)
+        for (int i = 0; i < maxButtonsPerRow; i++)
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(2),
