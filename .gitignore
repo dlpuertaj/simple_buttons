@@ -30,8 +30,19 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+.metadata
 /build/
 /coverage/
+/ios/
+/android/
+/linux/
+/web/
+/macos/
+/test/
+/windows/
+pubspec.*
+analysis_options.yaml
+
 
 # Symbolication related
 app.*.symbols
