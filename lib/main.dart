@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 6;
+    int buttons = 4;
 
     return MaterialApp(
       title: 'New App Ussing Flutter',
@@ -60,14 +60,10 @@ class MyHomeScreen extends StatelessWidget {
         verticalDirection: VerticalDirection.down,
 
         children: [
-          DynamicButtonBuilder(
-            numberOfButtons: numberOfButtons,
-            maxButtonsPerRow: maxButtonsPerRow,
-          ),
-
-          if (numberOfButtonRows == 2)
+          for (int i = 0; i < numberOfButtonRows; i++)
             DynamicButtonBuilder(
-              numberOfButtons: (numberOfButtons - maxButtonsPerRow),
+              currentButtonRow: i,
+              numberOfButtons: numberOfButtons,
               maxButtonsPerRow: maxButtonsPerRow,
             ),
 
@@ -81,10 +77,12 @@ class MyHomeScreen extends StatelessWidget {
 class DynamicButtonBuilder extends StatelessWidget {
   const DynamicButtonBuilder({
     super.key,
+    required this.currentButtonRow,
     required this.numberOfButtons,
     required this.maxButtonsPerRow,
   });
 
+  final int currentButtonRow;
   final int numberOfButtons;
   final int maxButtonsPerRow;
 
@@ -92,7 +90,14 @@ class DynamicButtonBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        for (int i = 0; i < maxButtonsPerRow; i++)
+        for (
+          int i = 0;
+          i <
+              (currentButtonRow > 1
+                  ? maxButtonsPerRow - numberOfButtons
+                  : numberOfButtons);
+          i++
+        )
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(2),
