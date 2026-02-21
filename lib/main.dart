@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         // This is the theme of your application.
-        colorScheme: .fromSeed(seedColor: Colors.red),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
 
       darkTheme: ThemeData(
@@ -43,8 +43,8 @@ class MyHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const int maxButtonsPerRow = 3;
     int numberOfButtonRows = numberOfButtons <= 3 ? 1 : 2;
-    int maxButtonsPerRow = 3;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,21 +61,21 @@ class MyHomeScreen extends StatelessWidget {
 
         children: [
           for (int i = 0; i < numberOfButtonRows; i++)
-            DynamicButtonBuilder(
+            ButtonRow(
               currentButtonRow: i,
               numberOfButtons: numberOfButtons,
               maxButtonsPerRow: maxButtonsPerRow,
             ),
 
-          Container(color: Colors.deepPurple, child: Text('')),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 }
 
-class DynamicButtonBuilder extends StatelessWidget {
-  const DynamicButtonBuilder({
+class ButtonRow extends StatelessWidget {
+  const ButtonRow({
     super.key,
     required this.currentButtonRow,
     required this.numberOfButtons,
