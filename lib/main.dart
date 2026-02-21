@@ -88,21 +88,17 @@ class DynamicButtonBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int buttonsToDraw = (currentButtonRow > 0
+        ? numberOfButtons - maxButtonsPerRow
+        : maxButtonsPerRow);
     return Row(
       children: [
-        for (
-          int i = 0;
-          i <
-              (currentButtonRow > 1
-                  ? maxButtonsPerRow - numberOfButtons
-                  : numberOfButtons);
-          i++
-        )
+        for (int j = 0; j < buttonsToDraw; j++)
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(2),
               color: Colors.red,
-              child: Text('Button ${i + 1}', textAlign: TextAlign.center),
+              child: Text('Button ${j + 1}', textAlign: TextAlign.center),
             ),
           ),
       ],
