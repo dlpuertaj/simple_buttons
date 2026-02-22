@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 4;
+    int buttons = 6;
 
     return MaterialApp(
       title: 'New App Ussing Flutter',
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         // This is the theme of your application.
-        colorScheme: .fromSeed(seedColor: Colors.red),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
       ),
 
       darkTheme: ThemeData(
@@ -41,10 +41,11 @@ class MyHomeScreen extends StatelessWidget {
 
   final int numberOfButtons;
 
+  static const int _maxButtonsPerRow = 3;
+
   @override
   Widget build(BuildContext context) {
-    int numberOfButtonRows = numberOfButtons <= 3 ? 1 : 2;
-    int maxButtonsPerRow = 3;
+    final rows = _buildRows();
 
     return Scaffold(
       appBar: AppBar(
@@ -55,53 +56,40 @@ class MyHomeScreen extends StatelessWidget {
       ),
 
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        verticalDirection: VerticalDirection.down,
-
         children: [
-          for (int i = 0; i < numberOfButtonRows; i++)
-            DynamicButtonBuilder(
-              currentButtonRow: i,
-              numberOfButtons: numberOfButtons,
-              maxButtonsPerRow: maxButtonsPerRow,
-            ),
+          const Spacer(), // pushes everything below it down
 
-          Container(color: Colors.deepPurple, child: Text('')),
+          for (final row in rows)
+            Row(
+              children: [
+                for (final index in row)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Button ${index + 1}'),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
         ],
       ),
     );
   }
-}
 
-class DynamicButtonBuilder extends StatelessWidget {
-  const DynamicButtonBuilder({
-    super.key,
-    required this.currentButtonRow,
-    required this.numberOfButtons,
-    required this.maxButtonsPerRow,
-  });
+  List<List<int>> _buildRows() {
+    final rows = <List<int>>[];
 
-  final int currentButtonRow;
-  final int numberOfButtons;
-  final int maxButtonsPerRow;
+    for (int i = 0; i < numberOfButtons; i += _maxButtonsPerRow) {
+      final end = (i + _maxButtonsPerRow < numberOfButtons)
+          ? i + _maxButtonsPerRow
+          : numberOfButtons;
 
-  @override
-  Widget build(BuildContext context) {
-    int buttonsToDraw = (currentButtonRow > 0
-        ? numberOfButtons - maxButtonsPerRow
-        : maxButtonsPerRow);
-    return Row(
-      children: [
-        for (int j = 0; j < buttonsToDraw; j++)
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(2),
-              color: Colors.red,
-              child: Text('Button ${j + 1}', textAlign: TextAlign.center),
-            ),
-          ),
-      ],
-    );
+      rows.add(List.generate(end - i, (index) => i + index));
+    }
+
+    return rows;
   }
 }
