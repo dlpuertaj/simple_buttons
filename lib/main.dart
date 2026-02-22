@@ -41,11 +41,10 @@ class MyHomeScreen extends StatelessWidget {
 
   final int numberOfButtons;
 
+  static const int _maxButtonsPerRow = 3;
+
   @override
   Widget build(BuildContext context) {
-    const int maxButtonsPerRow = 3;
-    int numberOfButtonRows = numberOfButtons <= 3 ? 1 : 2;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('The App Bar'),
@@ -55,6 +54,31 @@ class MyHomeScreen extends StatelessWidget {
       ),
 
       body: Column(
+        children: [
+          const Spacer(), // pushes everything below it down
+
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _maxButtonsPerRow,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+            ),
+            itemCount: numberOfButtons,
+            itemBuilder: (context, index) {
+              return ElevatedButton(
+                onPressed: () {},
+                child: Text('Button ${index + 1}'),
+              );
+            },
+          ),
+        ],
+      ),
+
+      /*
+      Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         verticalDirection: VerticalDirection.down,
@@ -69,7 +93,7 @@ class MyHomeScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
         ],
-      ),
+      ),*/
     );
   }
 }
