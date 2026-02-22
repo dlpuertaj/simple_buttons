@@ -10,8 +10,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 6;
-
     return MaterialApp(
       title: 'New App Ussing Flutter',
 
@@ -31,17 +29,31 @@ class MyApp extends StatelessWidget {
 
       themeMode: ThemeMode.dark,
 
-      home: MyHomeScreen(buttons), //const Text('The New App'),MyHomeScreen(),//
+      home: MyHomeScreen(), //const Text('The New App'),MyHomeScreen(),//
     );
   }
 }
 
-class MyHomeScreen extends StatelessWidget {
-  const MyHomeScreen(this.numberOfButtons, {super.key});
+class MyHomeScreen extends StatefulWidget {
+  const MyHomeScreen({super.key});
 
-  final int numberOfButtons;
+  @override
+  State<MyHomeScreen> createState() => _MyHomeScreenState();
+}
 
+class _MyHomeScreenState extends State<MyHomeScreen> {
   static const int _maxButtonsPerRow = 3;
+  static const int _maxTotalButtons = 6;
+
+  int _numberOfButtons = 1;
+
+  void _addButton() {
+    if (_numberOfButtons >= _maxTotalButtons) return;
+
+    setState(() {
+      _numberOfButtons++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +64,12 @@ class MyHomeScreen extends StatelessWidget {
         title: Text('The App Bar'),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add_circle))],
+        actions: [
+          IconButton(
+            onPressed: _numberOfButtons >= _maxTotalButtons ? null : _addButton,
+            icon: Icon(Icons.add_circle),
+          ),
+        ],
       ),
 
       body: Column(
@@ -82,10 +99,10 @@ class MyHomeScreen extends StatelessWidget {
   List<List<int>> _buildRows() {
     final rows = <List<int>>[];
 
-    for (int i = 0; i < numberOfButtons; i += _maxButtonsPerRow) {
-      final end = (i + _maxButtonsPerRow < numberOfButtons)
+    for (int i = 0; i < _numberOfButtons; i += _maxButtonsPerRow) {
+      final end = (i + _maxButtonsPerRow < _numberOfButtons)
           ? i + _maxButtonsPerRow
-          : numberOfButtons;
+          : _numberOfButtons;
 
       rows.add(List.generate(end - i, (index) => i + index));
     }
