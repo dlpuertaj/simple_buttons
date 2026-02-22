@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 4;
+    int buttons = 7;
 
     return MaterialApp(
       title: 'New App Ussing Flutter',
@@ -45,6 +45,8 @@ class MyHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rows = _buildRows();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('The App Bar'),
@@ -57,44 +59,38 @@ class MyHomeScreen extends StatelessWidget {
         children: [
           const Spacer(), // pushes everything below it down
 
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(8),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: _maxButtonsPerRow,
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
+          for (final row in rows)
+            Row(
+              children: [
+                for (final index in row)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Button ${index + 1}'),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            itemCount: numberOfButtons,
-            itemBuilder: (context, index) {
-              return ElevatedButton(
-                onPressed: () {},
-                child: Text('Button ${index + 1}'),
-              );
-            },
-          ),
         ],
       ),
-
-      /*
-      Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        verticalDirection: VerticalDirection.down,
-
-        children: [
-          for (int i = 0; i < numberOfButtonRows; i++)
-            ButtonRow(
-              currentButtonRow: i,
-              numberOfButtons: numberOfButtons,
-              maxButtonsPerRow: maxButtonsPerRow,
-            ),
-
-          const SizedBox(height: 20),
-        ],
-      ),*/
     );
+  }
+
+  List<List<int>> _buildRows() {
+    final rows = <List<int>>[];
+
+    for (int i = 0; i < numberOfButtons; i += _maxButtonsPerRow) {
+      final end = (i + _maxButtonsPerRow < numberOfButtons)
+          ? i + _maxButtonsPerRow
+          : numberOfButtons;
+
+      rows.add(List.generate(end - i, (index) => i + index));
+    }
+
+    return rows;
   }
 }
 
