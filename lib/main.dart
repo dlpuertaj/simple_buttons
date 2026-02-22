@@ -72,26 +72,28 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         ],
       ),
 
-      body: Column(
-        children: [
-          const Spacer(), // pushes everything below it down
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Spacer(), // pushes everything below it down
 
-          for (final row in rows)
-            Row(
-              children: [
-                for (final index in row)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Button ${index + 1}'),
+            for (final row in rows)
+              Row(
+                children: [
+                  for (final index in row)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Button ${index + 1}'),
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-        ],
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
