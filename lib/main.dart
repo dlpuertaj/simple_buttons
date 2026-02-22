@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 7;
+    int buttons = 6;
 
     return MaterialApp(
       title: 'New App Ussing Flutter',
@@ -65,7 +65,7 @@ class MyHomeScreen extends StatelessWidget {
                 for (final index in row)
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(0),
                       child: ElevatedButton(
                         onPressed: () {},
                         child: Text('Button ${index + 1}'),
@@ -91,37 +91,5 @@ class MyHomeScreen extends StatelessWidget {
     }
 
     return rows;
-  }
-}
-
-class ButtonRow extends StatelessWidget {
-  const ButtonRow({
-    super.key,
-    required this.currentButtonRow,
-    required this.numberOfButtons,
-    required this.maxButtonsPerRow,
-  });
-
-  final int currentButtonRow;
-  final int numberOfButtons;
-  final int maxButtonsPerRow;
-
-  @override
-  Widget build(BuildContext context) {
-    int buttonsToDraw = (currentButtonRow > 0
-        ? numberOfButtons - maxButtonsPerRow
-        : maxButtonsPerRow);
-    return Row(
-      children: [
-        for (int j = 0; j < buttonsToDraw; j++)
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(2),
-              color: Colors.red,
-              child: Text('Button ${j + 1}', textAlign: TextAlign.center),
-            ),
-          ),
-      ],
-    );
   }
 }
