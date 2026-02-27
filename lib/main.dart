@@ -29,26 +29,42 @@ class MyApp extends StatelessWidget {
 
       themeMode: ThemeMode.dark,
 
-      home: MyHomeScreen(), //const Text('The New App'),MyHomeScreen(),//
+      home: const MyHomeScreen(
+        maxButtonsPerRow: 3,
+        maxTotalButtons: 6,
+        initialButtons: 1, //const Text('The New App'),MyHomeScreen(),//
+      ),
     );
   }
 }
 
 class MyHomeScreen extends StatefulWidget {
-  const MyHomeScreen({super.key});
+  final int maxButtonsPerRow;
+  final int maxTotalButtons;
+  final int initialButtons;
+
+  const MyHomeScreen({
+    super.key,
+    this.maxButtonsPerRow = 3,
+    this.maxTotalButtons = 6,
+    this.initialButtons = 1,
+  }) : assert(initialButtons >= 0 && initialButtons <= maxTotalButtons);
 
   @override
   State<MyHomeScreen> createState() => _MyHomeScreenState();
 }
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
-  static const int _maxButtonsPerRow = 3;
-  static const int _maxTotalButtons = 6;
+  late int _numberOfButtons;
 
-  int _numberOfButtons = 1;
+  @override
+  void initState() {
+    super.initState();
+    _numberOfButtons = widget.initialButtons;
+  }
 
   void _addButton() {
-    if (_numberOfButtons >= _maxTotalButtons) return;
+    if (_numberOfButtons >= widget.maxTotalButtons) return;
 
     setState(() {
       _numberOfButtons++;
@@ -66,26 +82,30 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           IconButton(
-            onPressed: _numberOfButtons >= _maxTotalButtons ? null : _addButton,
-            icon: Icon(Icons.add_circle),
+            onPressed: _numberOfButtons < widget.maxTotalButtons
+                ? _addButton
+                : null,
+            icon: const Icon(Icons.add_circle),
           ),
         ],
       ),
 
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Spacer(), // pushes everything below it down
-
             for (final row in rows)
               Row(
                 children: [
                   for (final index in row)
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(1),
+                        padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          key: ValueKey(index),
+                          onPressed: () {
+                            debugPrint('Button ${index + 1} pressed');
+                          },
                           child: Text('Button ${index + 1}'),
                         ),
                       ),
@@ -101,9 +121,9 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   List<List<int>> _buildRows() {
     final rows = <List<int>>[];
 
-    for (int i = 0; i < _numberOfButtons; i += _maxButtonsPerRow) {
-      final end = (i + _maxButtonsPerRow < _numberOfButtons)
-          ? i + _maxButtonsPerRow
+    for (int i = 0; i < _numberOfButtons; i += widget.maxButtonsPerRow) {
+      final end = (i + widget.maxButtonsPerRow < _numberOfButtons)
+          ? i + widget.maxButtonsPerRow
           : _numberOfButtons;
 
       rows.add(List.generate(end - i, (index) => i + index));
