@@ -10,8 +10,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    int buttons = 6;
-
     return MaterialApp(
       title: 'New App Ussing Flutter',
 
@@ -31,17 +29,47 @@ class MyApp extends StatelessWidget {
 
       themeMode: ThemeMode.dark,
 
-      home: MyHomeScreen(buttons), //const Text('The New App'),MyHomeScreen(),//
+      home: const MyHomeScreen(
+        maxButtonsPerRow: 3,
+        maxTotalButtons: 6,
+        initialButtons: 1, //const Text('The New App'),MyHomeScreen(),//
+      ),
     );
   }
 }
 
-class MyHomeScreen extends StatelessWidget {
-  const MyHomeScreen(this.numberOfButtons, {super.key});
+class MyHomeScreen extends StatefulWidget {
+  final int maxButtonsPerRow;
+  final int maxTotalButtons;
+  final int initialButtons;
 
-  final int numberOfButtons;
+  const MyHomeScreen({
+    super.key,
+    this.maxButtonsPerRow = 3,
+    this.maxTotalButtons = 6,
+    this.initialButtons = 1,
+  }) : assert(initialButtons >= 0 && initialButtons <= maxTotalButtons);
 
-  static const int _maxButtonsPerRow = 3;
+  @override
+  State<MyHomeScreen> createState() => _MyHomeScreenState();
+}
+
+class _MyHomeScreenState extends State<MyHomeScreen> {
+  late int _numberOfButtons;
+
+  @override
+  void initState() {
+    super.initState();
+    _numberOfButtons = widget.initialButtons;
+  }
+
+  void _addButton() {
+    if (_numberOfButtons >= widget.maxTotalButtons) return;
+
+    setState(() {
+      _numberOfButtons++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,29 +80,40 @@ class MyHomeScreen extends StatelessWidget {
         title: Text('The App Bar'),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add_circle))],
+        actions: [
+          IconButton(
+            onPressed: _numberOfButtons < widget.maxTotalButtons
+                ? _addButton
+                : null,
+            icon: const Icon(Icons.add_circle),
+          ),
+        ],
       ),
 
-      body: Column(
-        children: [
-          const Spacer(), // pushes everything below it down
-
-          for (final row in rows)
-            Row(
-              children: [
-                for (final index in row)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Button ${index + 1}'),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            for (final row in rows)
+              Row(
+                children: [
+                  for (final index in row)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          key: ValueKey(index),
+                          onPressed: () {
+                            debugPrint('Button ${index + 1} pressed');
+                          },
+                          child: Text('Button ${index + 1}'),
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-        ],
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -82,10 +121,10 @@ class MyHomeScreen extends StatelessWidget {
   List<List<int>> _buildRows() {
     final rows = <List<int>>[];
 
-    for (int i = 0; i < numberOfButtons; i += _maxButtonsPerRow) {
-      final end = (i + _maxButtonsPerRow < numberOfButtons)
-          ? i + _maxButtonsPerRow
-          : numberOfButtons;
+    for (int i = 0; i < _numberOfButtons; i += widget.maxButtonsPerRow) {
+      final end = (i + widget.maxButtonsPerRow < _numberOfButtons)
+          ? i + widget.maxButtonsPerRow
+          : _numberOfButtons;
 
       rows.add(List.generate(end - i, (index) => i + index));
     }
