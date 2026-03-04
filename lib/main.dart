@@ -142,6 +142,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
             children: [
               TextField(
                 controller: _textController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Enter text',
                   border: OutlineInputBorder(),
