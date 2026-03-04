@@ -56,12 +56,15 @@ class MyHomeScreen extends StatefulWidget {
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
   late int _numberOfButtons;
+  late List<String> _listOfButtons;
+
   final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _numberOfButtons = widget.initialButtons;
+    _listOfButtons = <String>['Button 0'];
   }
 
   void _addButton() {
@@ -105,7 +108,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           onPressed: () {
                             debugPrint('Button ${index + 1} pressed');
                           },
-                          child: Text('Button ${index + 1}'),
+                          child: Text(_listOfButtons[index]),
                         ),
                       ),
                     ),
