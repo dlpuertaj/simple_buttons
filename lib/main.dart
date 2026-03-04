@@ -152,6 +152,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Handle the apply action here, e.g., print the text or process it
+                  _addButton();
                   print('Applied text: ${_textController.text}');
                   Navigator.of(context).pop(); // Close the dialog
                 },
