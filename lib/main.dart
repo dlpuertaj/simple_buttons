@@ -67,11 +67,12 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     _listOfButtons = <String>['Button 0'];
   }
 
-  void _addButton() {
+  void _addButton(String name) {
     if (_numberOfButtons >= widget.maxTotalButtons) return;
 
     setState(() {
       _numberOfButtons++;
+      _listOfButtons.add(name);
     });
   }
 
@@ -155,7 +156,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Handle the apply action here, e.g., print the text or process it
-                  _addButton();
+                  _addButton(_textController.text);
                   print('Applied text: ${_textController.text}');
                   Navigator.of(context).pop(); // Close the dialog
                 },
