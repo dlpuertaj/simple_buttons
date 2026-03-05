@@ -56,18 +56,23 @@ class MyHomeScreen extends StatefulWidget {
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
   late int _numberOfButtons;
+  late List<String> _listOfButtons;
+
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _numberOfButtons = widget.initialButtons;
+    _listOfButtons = <String>['Button 0'];
   }
 
-  void _addButton() {
+  void _addButton(String name) {
     if (_numberOfButtons >= widget.maxTotalButtons) return;
 
     setState(() {
       _numberOfButtons++;
+      _listOfButtons.add(name);
     });
   }
 
@@ -82,9 +87,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           IconButton(
-            onPressed: _numberOfButtons < widget.maxTotalButtons
-                ? _addButton
-                : null,
+            onPressed: _showPopupForm,
             icon: const Icon(Icons.add_circle),
           ),
         ],
@@ -106,7 +109,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                           onPressed: () {
                             debugPrint('Button ${index + 1} pressed');
                           },
-                          child: Text('Button ${index + 1}'),
+                          child: Text(_listOfButtons[index]),
                         ),
                       ),
                     ),
@@ -130,5 +133,39 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     }
 
     return rows;
+  }
+
+  void _showPopupForm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Simple Form'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _textController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: 'Enter text',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle the apply action here, e.g., print the text or process it
+                  _addButton(_textController.text);
+                  print('Applied text: ${_textController.text}');
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('Apply'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
